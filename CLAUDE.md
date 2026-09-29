@@ -18,10 +18,12 @@ build workflow.
   upstream and drops our files. Afterwards `git fetch origin`, fast-forward, and build all
   five boards to catch upstream breakage. Never commit to `master` directly.
   Two upstream workflows are disabled in this repo's Actions settings on GitHub, which is
-  invisible in the tree: `Regenerate Files` (`regen_push.yml`) has write access and no
-  repository guard, so it could otherwise push bot commits to `master` (#10), and
-  `CI Build Major Branch` (`ci_build_major_branch.yml`) builds every keyboard on each push
-  to `master`, noise for a fork that carries five boards (#11).
+  invisible in the tree: `Regenerate Files` (`regen_push.yml`, #10) and `CI Build Major
+  Branch` (`ci_build_major_branch.yml`, #11). Both run on every push to `master`, and both
+  guard their real work (opening a regen PR, building every keyboard) with
+  `if: github.repository == 'qmk/qmk_firmware'`, so here regen discards its output and the
+  build is skipped. Disabled, they cost no Actions minutes and stay inert if upstream ever
+  drops those guards.
 - **Run `gh` with the default repo set.** `gh` ranks an `upstream` remote above `origin`,
   so with no default a bare `gh issue view` or `gh pr create` here targets
   `qmk/qmk_firmware`. `gh repo set-default Ancient-Monument/qmk_firmware` pins it for this
