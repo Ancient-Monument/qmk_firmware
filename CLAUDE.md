@@ -1,8 +1,10 @@
-# rharmes/qmk_firmware
+# Ancient-Monument/qmk_firmware
 
 A fork of [qmk/qmk_firmware](https://github.com/qmk/qmk_firmware) that exists to hold
 Ross's handwired boards under `keyboards/handwired/`: `am37`, `am49`, `am96`, `zf65`,
 `vc3`, plus the fork's own tooling in `tools/rharmes/`. Nothing else in the tree is ours.
+It moved from the `rharmes` account to the Ancient-Monument org on 2026-09-29 (#14);
+GitHub redirects the old URLs, and `tools/rharmes/` keeps its name.
 `~/.claude/CLAUDE.md` holds the working defaults; this file holds the exceptions and the
 build workflow.
 
@@ -10,14 +12,20 @@ build workflow.
 
 - **`master` is upstream `master` plus our files** (the boards, `tools/rharmes/`, this
   file), merged in by PR. Pull upstream in on GitHub with
-  `gh repo sync rharmes/qmk_firmware --source qmk/qmk_firmware --branch master` (needs the
-  `workflow` token scope). Now that `master` has our commits it should produce a merge
-  commit; this has not been exercised yet. **Never pass `--force`**: it hard-resets
-  `master` to upstream and drops our files. Afterwards `git fetch origin`, fast-forward,
-  and build all five boards to catch upstream breakage. Never commit to `master` directly.
-  Upstream's `Regenerate Files` workflow (`regen_push.yml`) is disabled in this repo's
-  Actions settings on GitHub: it has write access and no repository guard, so it could
-  otherwise push bot commits to `master` (#10).
+  `gh repo sync Ancient-Monument/qmk_firmware --source qmk/qmk_firmware --branch master`
+  (needs the `workflow` token scope). It merges upstream into `master` as a merge commit
+  (first run 2026-09-29, #14). **Never pass `--force`**: it hard-resets `master` to
+  upstream and drops our files. Afterwards `git fetch origin`, fast-forward, and build all
+  five boards to catch upstream breakage. Never commit to `master` directly.
+  Two upstream workflows are disabled in this repo's Actions settings on GitHub, which is
+  invisible in the tree: `Regenerate Files` (`regen_push.yml`) has write access and no
+  repository guard, so it could otherwise push bot commits to `master` (#10), and
+  `CI Build Major Branch` (`ci_build_major_branch.yml`) builds every keyboard on each push
+  to `master`, noise for a fork that carries five boards (#11).
+- **Run `gh` with the default repo set.** `gh` ranks an `upstream` remote above `origin`,
+  so with no default a bare `gh issue view` or `gh pr create` here targets
+  `qmk/qmk_firmware`. `gh repo set-default Ancient-Monument/qmk_firmware` pins it for this
+  checkout (set 2026-09-29); pass `--repo` if a command still resolves upstream.
 - **Work on a branch off `master`** and land it with a PR. The boards, `tools/rharmes/`
   and this file are the only files any branch should touch.
 - **`dev` is frozen.** It is the QMK 0.9.46-era tree the boards ran on until September
