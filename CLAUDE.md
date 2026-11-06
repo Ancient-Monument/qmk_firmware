@@ -1,8 +1,8 @@
 # Ancient-Monument/qmk_firmware
 
 A fork of [qmk/qmk_firmware](https://github.com/qmk/qmk_firmware) that exists to hold
-Ross's handwired boards under `keyboards/handwired/`: `am37`, `am49`, `am96`, `zf65`,
-`vc3`, plus the fork's own tooling in `tools/rharmes/`. Nothing else in the tree is ours.
+Ross's handwired boards under `keyboards/handwired/`: `am34`, `am37`, `am49`, `am96`,
+`zf65`, `vc3`, plus the fork's own tooling in `tools/rharmes/`. Nothing else in the tree is ours.
 It moved from the `rharmes` account to the Ancient-Monument org on 2026-09-29 (#14);
 GitHub redirects the old URLs, and `tools/rharmes/` keeps its name.
 `~/.claude/CLAUDE.md` holds the working defaults; this file holds the exceptions and the
@@ -16,7 +16,7 @@ build workflow.
   (needs the `workflow` token scope). It merges upstream into `master` as a merge commit
   (first run 2026-09-29, #14). **Never pass `--force`**: it hard-resets `master` to
   upstream and drops our files. Afterwards `git fetch origin`, fast-forward, and build all
-  five boards to catch upstream breakage. Never commit to `master` directly.
+  six boards to catch upstream breakage. Never commit to `master` directly.
   Two upstream workflows are disabled in this repo's Actions settings on GitHub, which is
   invisible in the tree: `Regenerate Files` (`regen_push.yml`, #10) and `CI Build Major
   Branch` (`ci_build_major_branch.yml`, #11). Both run on every push to `master`, and both
@@ -44,19 +44,22 @@ legacy tree it dies with `conflicting subparser: config`.
     qmk compile -kb handwired/am37 -km default
     qmk flash   -kb handwired/am37 -km default    # waits for the bootloader
 
-All boards are `atmega32u4`. `am37`, `am49`, `am96` and `zf65` use `qmk-dfu`; `vc3` uses
-`caterina`. Flashing a `qmk-dfu` board by hand needs `dfu-programmer atmega32u4 erase
+All boards but `am34` are `atmega32u4`. `am37`, `am49`, `am96` and `zf65` use `qmk-dfu`;
+`vc3` uses `caterina`. `am34` is an Elite-Pi (RP2040): its `keyboard.json` keeps Elite-C pin
+names and its `rules.mk` sets `CONVERT_TO = elite_pi`, so a plain `qmk compile` builds a
+`.uf2`, flashed by copying it to the `RPI-RP2` drive. Flashing a `qmk-dfu` board by hand needs `dfu-programmer atmega32u4 erase
 --force` first, or `flash` fails with `Memory write error`.
 
 clangd: run `tools/rharmes/compiledb.py` (about three minutes) to build
-`compile_commands.json` for all five boards, then restart the session so clangd drops its
+`compile_commands.json` for all six boards, then restart the session so clangd drops its
 guessed flags. It wraps `qmk compile --compiledb`, which handles one board, cleans `.build`
 and never lists `keymap.c` (modern QMK compiles it by `#include`), and fixes each of those.
 Rerun it after touching `keyboard.json` or a `rules.mk`, since features become `-D` flags,
 and after any clean build: `make clean`, `qmk compile --clean` or a single-board
 `qmk compile --compiledb` all delete the generated headers the database points at, and
 clangd then reports dozens of phantom errors. Every shared source (everything except the
-five keymaps and each board's generated `default_keyboard.c`) is analysed with the flags
+six keymaps, each board's generated `default_keyboard.c` and the RP2040 sources only `am34`
+compiles) is analysed with the flags
 of the first board in the script's `BOARDS` list, currently `am37`.
 `compile_commands.json` stays in `.git/info/exclude`; `.clangd` is upstream's, tracked.
 

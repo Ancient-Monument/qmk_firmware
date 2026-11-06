@@ -10,11 +10,11 @@ This script runs the generator per board, checks the database it wrote really
 is that board's (a parse failure inside `--compiledb` leaves the previous file
 in place and still exits 0), clones each board's keymap_introspection.c record
 for its keymap.c, merges the databases (first board wins, so every shared
-source, meaning everything except the five keymaps and each board's generated
-default_keyboard.c, is analysed with BOARDS[0]'s flags), then rebuilds every board but the last so the generated
+source, meaning everything except the six keymaps, each board's generated
+default_keyboard.c and the RP2040 sources only am34 compiles, is analysed with BOARDS[0]'s flags), then rebuilds every board but the last so the generated
 `.build/obj_*/src/default_keyboard.h` headers the database points at exist.
 Each `--compiledb` run's own build is discarded by the next run's clean, so
-nine compiles happen where five would do; that is the price of driving the
+eleven compiles happen where six would do; that is the price of driving the
 stable `qmk` CLI instead of importing its internals.
 
 If generating the database fails or is interrupted, the previous
@@ -29,7 +29,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-BOARDS = ["am37", "am49", "am96", "zf65", "vc3"]
+BOARDS = ["am37", "am49", "am96", "zf65", "vc3", "am34"]
 ROOT = Path(__file__).resolve().parents[2]
 DB = ROOT / "compile_commands.json"
 INTROSPECTION = "quantum/keymap_introspection.c"
