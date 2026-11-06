@@ -106,6 +106,7 @@
 #define SFT_0 LSFT(KC_0)                  // )
 #define OPT_8 LALT(KC_8)                  // •
 
+// The AM34 has no centre thumb keys; the three middle thumb positions are not wired.
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Keymap 0: QWERTY layer (both hands)

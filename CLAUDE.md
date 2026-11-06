@@ -45,10 +45,11 @@ legacy tree it dies with `conflicting subparser: config`.
     qmk flash   -kb handwired/am37 -km default    # waits for the bootloader
 
 All boards but `am34` are `atmega32u4`. `am37`, `am49`, `am96` and `zf65` use `qmk-dfu`;
-`vc3` uses `caterina`. `am34` is an Elite-Pi (RP2040): its `keyboard.json` keeps Elite-C pin
-names and its `rules.mk` sets `CONVERT_TO = elite_pi`, so a plain `qmk compile` builds a
-`.uf2`, flashed by copying it to the `RPI-RP2` drive. Flashing a `qmk-dfu` board by hand needs `dfu-programmer atmega32u4 erase
---force` first, or `flash` fails with `Memory write error`.
+`vc3` uses `caterina`. Flashing a `qmk-dfu` board by hand needs `dfu-programmer atmega32u4
+erase --force` first, or `flash` fails with `Memory write error`. `am34` is an Elite-Pi
+(RP2040): its `keyboard.json` keeps Elite-C pin names and its `rules.mk` sets
+`CONVERT_TO = elite_pi`, so a plain `qmk compile` builds a `.uf2`. Hold Q while plugging it
+in (bootmagic) to reach its bootloader, then copy the file to the `RPI-RP2` drive.
 
 clangd: run `tools/rharmes/compiledb.py` (about three minutes) to build
 `compile_commands.json` for all six boards, then restart the session so clangd drops its

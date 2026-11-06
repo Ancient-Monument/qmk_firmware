@@ -15,7 +15,7 @@
         "lto": true
     },
     "features": {
-        "bootmagic": false,
+        "bootmagic": true,
         "extrakey": true,
         "mousekey": true,
         "nkro": false
